@@ -1,0 +1,62 @@
+version: '3.9'
+services:
+    php-apache:
+        container_name: php-apache
+        hostname: php-apache2
+        image: php:8.2-rc-apache-buster
+        restart: unless-stopped
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            bridge-10.6.6.1:
+                ipv4_address: 10.6.6.3
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - $PWD/volume_DB_file:/var/www/html
+        depends_on:
+            - MySql
+    
+    MySql:
+        container_name: MySql
+        hostname: mysql_latest
+        image: mysql:latest
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: users
+            MYSQL_USER: jarofilip
+            MYSQL_PASSWORD: Jaro88filip
+        ports:
+            - 6033:3306
+        volumes:
+            - './.bash_aliases:/root/.bash_aliases'
+            - './.bashrc:/root/.bashrc'
+        networks:
+            bridge-10.6.6.1:
+                ipv4_address: 10.6.6.4
+    
+    phpmyadmin:
+        # name: phpmyadmin
+        image: phpmyadmin:latest
+        restart: always
+        ports:
+            - 8080:80
+        environment:
+            - PMA_ARBITRARY=1
+        networks:
+            bridge-10.6.6.1:
+                ipv4_address: 10.6.6.5
+
+# Crate a new network with basik driver bridge
+networks:
+    bridge-10.6.6.1:
+        name: bridge-10.6.6.1
+        driver: bridge
+        ipam:
+            config:
+              - subnet: 10.6.6.0/16
+                gateway: 10.6.6.1
