@@ -10,6 +10,7 @@ services:
             - 443:443
         networks:
             bridge-10.6.6.1:
+                # private IP address
                 ipv4_address: 10.6.6.3
         build:
             context: .
@@ -51,11 +52,13 @@ services:
             bridge-10.6.6.1:
                 ipv4_address: 10.6.6.5
 
-# Crate a new network with basik driver bridge
+# Create a new network with basik driver bridge
 networks:
-    bridge-10.6.6.1:
-        name: bridge-10.6.6.1
+    bridge-10.6.6.1: 
+        # the network name
+        name: bridge-10.6.6.1 
         driver: bridge
+        # check network by command> docker network inspect networkname
         ipam:
             config:
               - subnet: 10.6.6.0/16
