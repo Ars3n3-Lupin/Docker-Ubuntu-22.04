@@ -10,7 +10,6 @@ services:
             - 443:443
         networks:
             bridge-10.6.6.1:
-                # private IP address
                 ipv4_address: 10.6.6.3
         build:
             context: .
@@ -22,23 +21,31 @@ services:
     
     MySql:
         container_name: MySql
-        hostname: mysql_latest
+        hostname: mysql_8
         image: mysql:latest
         command: --default-authentication-plugin=mysql_native_password
         restart: always
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: users
+            # MYSQL_ROOT_PASSWORD_FILE : /run/secrets/root_pswd
+            MYSQL_ROOT_PASSWORD: Jaro99filip
+            MYSQL_DATABASE: projectDB
             MYSQL_USER: jarofilip
             MYSQL_PASSWORD: Jaro88filip
+        secrets:
+            - root_pswd
         ports:
             - 6033:3306
-        volumes:
-            - './.bash_aliases:/root/.bash_aliases'
-            - './.bashrc:/root/.bashrc'
+        build:
+            context: .
+            dockerfile: Dockerfile_mysql
         networks:
             bridge-10.6.6.1:
                 ipv4_address: 10.6.6.4
+        volumes:
+            - './.bash_aliases:/root/.bash_aliases'
+            - './.bashrc:/root/.bashrc'
+            - '$PWD/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql'
+            - '$PWD/mysql/mysql.cnf:/etc/mysql/conf.d/custom.cnf'
     
     phpmyadmin:
         # name: phpmyadmin
@@ -52,13 +59,15 @@ services:
             bridge-10.6.6.1:
                 ipv4_address: 10.6.6.5
 
-# Create a new network with basik driver bridge
+
+secrets:
+    root_pswd:
+        file: ./mysql/root-pswd.txt
+
 networks:
-    bridge-10.6.6.1: 
-        # the network name
-        name: bridge-10.6.6.1 
+    bridge-10.6.6.1:
+        name: bridge-10.6.6.1
         driver: bridge
-        # check network by command> docker network inspect networkname
         ipam:
             config:
               - subnet: 10.6.6.0/16
