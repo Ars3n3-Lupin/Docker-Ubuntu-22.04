@@ -25,14 +25,15 @@ services:
         image: mysql:latest
         command: --default-authentication-plugin=mysql_native_password
         restart: always
+        tty: true
         environment:
-            # MYSQL_ROOT_PASSWORD_FILE : /run/secrets/root_pswd
-            MYSQL_ROOT_PASSWORD: Jaro99filip
+            MYSQL_ROOT_PASSWORD_FILE : /run/secrets/root_pswd
             MYSQL_DATABASE: projectDB
             MYSQL_USER: jarofilip
-            MYSQL_PASSWORD: Jaro88filip
+            MYSQL_PASSWORD_FILE: /run/secrets/user_pswd
         secrets:
             - root_pswd
+            - user_pswd
         ports:
             - 6033:3306
         build:
@@ -62,7 +63,9 @@ services:
 
 secrets:
     root_pswd:
-        file: ./mysql/root-pswd.txt
+        file: ./secrets/root-pswd.txt
+    user_pswd:
+        file: ./secrets/user-pswd.txt
 
 networks:
     bridge-10.6.6.1:
