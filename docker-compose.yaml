@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+    ubuntu-2204:
+        build:
+            context: .
+            dockerfile: dockerfile
+        image: ubuntu:2204
+        container_name: Ubuntu-2204
+        hostname: ubuntu-2204
+        restart: unless-stopped
+        ports:
+            - 8090:80
+            - 790:790
+        networks:
+            bridge-10.5.5.1:
+                ipv4_address: 10.5.5.3
+        volumes:
+            - $PWD/commands.sh:/scripts/commands.sh
+
+# secrets:
+#     root_pswd:
+#         file: ./secrets/root-pswd.txt
+#     user_pswd:
+#         file: ./secrets/user-pswd.txt
+
+networks:
+    bridge-10.5.5.1:
+        name: bridge10.5.5.1
+        driver: bridge
+        ipam:
+            config:
+              - subnet: 10.5.5.0/16
+                gateway: 10.5.5.1
