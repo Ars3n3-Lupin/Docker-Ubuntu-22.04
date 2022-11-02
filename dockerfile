@@ -33,5 +33,5 @@ COPY commands.sh /scripts/commands.sh
 RUN ["chmod", "+x", "/scripts/commands.sh"]
 CMD [ "sh", "-c", "echo $HOME" ]
 ENTRYPOINT ["sh", "-c", "service ssh restart && sudo service apache2 restart && bash"]
-#CMD [ "sh", "/scripts/commands.s" ]
+#CMD [ "sh", "/scripts/commands.sh" ]
 #ENTRYPOINT service ssh restart && bash
