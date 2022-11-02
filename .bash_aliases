@@ -9,4 +9,8 @@ LS_COLORS='di=1;35:ln=0;36:*.conf*=1;33'
 alias dps='docker ps'
 alias dpa='docker ps -a'
 alias dimg='docker images'
-alias drmi='docker rmi'
+
+#========Minikube
+alias mini='minikube'
+alias minictl='minikube kubectl'
+alias miinis='minikube start'
